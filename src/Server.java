@@ -25,7 +25,7 @@ public class Server extends NetObject{
 		JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		textArea.setEditable(false);
-		frame.getContentPane().add(textArea);
+		frame.getContentPane().add(scrollPane);
 
 		frame.setVisible(true);
 	}
@@ -44,7 +44,7 @@ public class Server extends NetObject{
 			@Override
 			public void run() {
 				try {
-					writeMessage("<server>: Listening for connections.");
+					writeMessage("[listening for connections]");
 
 					ServerSocket serverSocket = new ServerSocket(mPort);
 
@@ -63,15 +63,15 @@ public class Server extends NetObject{
 		while (true)
 		{
 			Socket clientSocket = qSockets.take();
-			writeMessage("<server>: New connection.");
+			writeMessage("[new connection]");
 
 			Message msg = new Message();
 			receiveTCPData(clientSocket, msg);
-
 			String recMsg = new String(msg.mData);
+			writeMessage("<client>: " + recMsg);
 
-
-			msg.mData = recMsg.toUpperCase().getBytes();
+			String sndMsg = "Received: " + recMsg;
+			msg.mData = sndMsg.getBytes();
 			sendTCPData(clientSocket, msg);
 		}
 	}
@@ -80,10 +80,14 @@ public class Server extends NetObject{
 		String IP = "127.0.0.1";
 		int port = 4567;
 
-		for (int i = 0; i < 4; i++) {
-			Client client = new Client(IP, port);
-			client.start();
-		}
+		Client client1 = new Client(IP, port, "Jim");
+		client1.start();
+		Client client2 = new Client(IP, port, "Harrison");
+		client2.start();
+		Client client3 = new Client(IP, port, "Steve");
+		client3.start();
+		Client client4 = new Client(IP, port, "Francis");
+		client4.start();
 
 		Server server = new Server(IP, port);
 		server.start();

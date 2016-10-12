@@ -39,7 +39,7 @@ public class NetObject extends Thread{
 	void sendTCPData(Socket socket, Message msg) throws Exception{
 		DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
 
-		//send size of data
+		//send size of data & name
 		ByteBuffer b = ByteBuffer.allocate(4);
 		b.putInt(msg.mData.length);
 		byte[] dataSize = b.array();

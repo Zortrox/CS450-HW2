@@ -8,11 +8,14 @@ import java.net.*;
 
 public class Client extends NetObject{
 
-	Client(String IP, int port) {
+	private String mName = "";
+
+	Client(String IP, int port, String name) {
 		mIP = IP;
 		mPort = port;
+		mName = name;
 
-		JFrame frame = new JFrame("Client");
+		JFrame frame = new JFrame("Client: " + mName);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setSize(new Dimension(300, 200));
 
@@ -60,7 +63,7 @@ public class Client extends NetObject{
 		}
 
 		//initialize message
-		String msgSend = "Hello, this is Matthew.";
+		String msgSend = "Hello, this is " + mName + ".";
 		writeMessage(msgSend);
 
 		Message msg = new Message();
@@ -74,7 +77,7 @@ public class Client extends NetObject{
 		for (int i=0; i<10; i++) {
 			socket = new Socket(mIP, mPort);
 			//custom message
-			msgSend = "test " + i;//JOptionPane.showInputDialog("What is your message?");
+			msgSend = "test " + i;
 			writeMessage(msgSend);
 
 			msg = new Message();
