@@ -22,12 +22,14 @@ public class Server extends NetObject{
 		frame.setSize(new Dimension(300, 200));
 
 		textArea = new JTextArea(1, 50);
-		JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		textArea.setEditable(false);
 		frame.getContentPane().add(scrollPane);
 
 		frame.setVisible(true);
+
+		frame.setLocation(0, 200);
 	}
 
 	public void run() {

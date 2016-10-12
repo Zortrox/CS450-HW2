@@ -16,6 +16,7 @@ class Message {
 public class NetObject extends Thread{
 
 	JTextArea textArea;
+	JScrollPane scrollPane;
 
 	String mIP = "";
 	int mPort = 0;
@@ -36,7 +37,7 @@ public class NetObject extends Thread{
 		inData.readFully(msg.mData);
 	}
 
-	void sendTCPData(Socket socket, Message msg) throws Exception{
+	void sendTCPData(Socket socket, Message msg) throws Exception {
 		DataOutputStream outData = new DataOutputStream(socket.getOutputStream());
 
 		//send size of data & name
@@ -51,5 +52,8 @@ public class NetObject extends Thread{
 
 	public void writeMessage(String msg) {
 		textArea.append(msg + "\n");
+
+		JScrollBar sb = scrollPane.getVerticalScrollBar();
+		sb.setValue( sb.getMaximum() );
 	}
 }

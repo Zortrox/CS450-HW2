@@ -20,7 +20,7 @@ public class Client extends NetObject{
 		frame.setSize(new Dimension(300, 200));
 
 		textArea = new JTextArea(1, 50);
-		JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		textArea.setEditable(false);
 		frame.getContentPane().add(scrollPane);
@@ -67,7 +67,7 @@ public class Client extends NetObject{
 		writeMessage(msgSend);
 
 		Message msg = new Message();
-		msg.mData = msgSend.getBytes();
+		msg.mData = prepData(msgSend);
 		sendTCPData(socket, msg);
 		receiveTCPData(socket, msg);
 		String msgReceive = new String(msg.mData);
@@ -81,12 +81,16 @@ public class Client extends NetObject{
 			writeMessage(msgSend);
 
 			msg = new Message();
-			msg.mData = msgSend.getBytes();
+			msg.mData = prepData(msgSend);
 			sendTCPData(socket, msg);
 			receiveTCPData(socket, msg);
 			msgReceive = new String(msg.mData);
 			writeMessage("<server>: " + msgReceive);
 			socket.close();
 		}
+	}
+
+	private byte[] prepData(String msg) {
+		return (mName + "=" + msg).getBytes();
 	}
 }
