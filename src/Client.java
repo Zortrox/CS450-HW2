@@ -3,6 +3,7 @@
  */
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.net.*;
 
@@ -24,6 +25,9 @@ public class Client extends NetObject{
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		textArea.setEditable(false);
 		frame.getContentPane().add(scrollPane);
+
+		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		frame.setVisible(true);
 	}

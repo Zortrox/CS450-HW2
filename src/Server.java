@@ -3,9 +3,14 @@
  */
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.io.File;
 import java.net.*;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class Server extends NetObject{
@@ -17,6 +22,13 @@ public class Server extends NetObject{
 		mIP = IP;
 		mPort = port;
 
+		//delete logs to overwrite
+		File folder = new File("server-saves");
+		File[] files = folder.listFiles();
+		for(File f: files) {
+			f.delete();
+		}
+
 		JFrame frame = new JFrame("Server");
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setSize(new Dimension(300, 200));
@@ -26,6 +38,9 @@ public class Server extends NetObject{
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		textArea.setEditable(false);
 		frame.getContentPane().add(scrollPane);
+
+		DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 		frame.setVisible(true);
 
@@ -70,12 +85,47 @@ public class Server extends NetObject{
 			Message msg = new Message();
 			receiveTCPData(clientSocket, msg);
 			String recMsg = new String(msg.mData);
-			writeMessage("<client>: " + recMsg);
+			String name = recMsg.substring(0, recMsg.indexOf('='));
+			recMsg = recMsg.substring(recMsg.indexOf('=') + 1);
+			writeMessage("<" + name + ">: " + recMsg);
+
+			//"process" data
+			Thread.sleep(250);
+
+			//save data
+			if (!serverSaveData(name, recMsg)) {
+				writeMessage("[old data from " + name + "]");
+			}
 
 			String sndMsg = "Received: " + recMsg;
 			msg.mData = sndMsg.getBytes();
 			sendTCPData(clientSocket, msg);
 		}
+	}
+
+	private boolean serverSaveData(String name, String data) {
+		Path file = Paths.get("server-saves/" + name + ".txt");
+
+		try {
+			Files.createFile(file);
+		} catch (Exception ex) {
+			//file already exists
+			//ex.printStackTrace();
+		}
+
+		try {
+			List lines = Files.readAllLines(file);
+
+			if (lines.contains(data)) {
+				return false;
+			}
+
+			Files.write(file, (data + "\n").getBytes(), StandardOpenOption.APPEND);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return true;
 	}
 
 	public static void main(String[] args) {

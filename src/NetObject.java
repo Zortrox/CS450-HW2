@@ -52,8 +52,6 @@ public class NetObject extends Thread{
 
 	public void writeMessage(String msg) {
 		textArea.append(msg + "\n");
-
-		JScrollBar sb = scrollPane.getVerticalScrollBar();
-		sb.setValue( sb.getMaximum() );
+		scrollPane.scrollRectToVisible(textArea.getBounds());
 	}
 }
