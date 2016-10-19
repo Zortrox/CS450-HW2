@@ -10,15 +10,18 @@ import java.net.*;
 public class Client extends NetObject{
 
 	private String mName = "";
+	private int mNumMsgs = 0;
 
-	Client(String IP, int port, String name) {
+	Client(String IP, int port, String name, int numMsgs, int xPos) {
 		mIP = IP;
 		mPort = port;
 		mName = name;
+		mNumMsgs = numMsgs;
 
 		JFrame frame = new JFrame("Client: " + mName);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setSize(new Dimension(300, 200));
+		frame.setLocation(xPos, 0);
 
 		textArea = new JTextArea(1, 50);
 		scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -78,7 +81,7 @@ public class Client extends NetObject{
 		writeMessage("<server>: " + msgReceive);
 		socket.close();
 
-		for (int i=0; i<10; i++) {
+		for (int i = 0; i < mNumMsgs; i++) {
 			socket = new Socket(mIP, mPort);
 			//custom message
 			msgSend = "test " + i;

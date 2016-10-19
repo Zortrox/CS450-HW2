@@ -17,10 +17,12 @@ public class Server extends NetObject{
 
 	private BlockingQueue<Socket> qSockets = new LinkedBlockingQueue<>();
 	private Thread tSockets;
+	private long mDelay = 10;
 
-	Server(String IP, int port) {
+	Server(String IP, int port, long delay) {
 		mIP = IP;
 		mPort = port;
+		mDelay = delay;
 
 		//delete logs to overwrite
 		File folder = new File("server-saves");
@@ -90,7 +92,7 @@ public class Server extends NetObject{
 			writeMessage("<" + name + ">: " + recMsg);
 
 			//"process" data
-			Thread.sleep(250);
+			Thread.sleep(mDelay);
 
 			//save data
 			if (!serverSaveData(name, recMsg)) {
@@ -131,17 +133,19 @@ public class Server extends NetObject{
 	public static void main(String[] args) {
 		String IP = "127.0.0.1";
 		int port = 4567;
+		int numMsgs = 100;
+		long delay = 10;
 
-		Client client1 = new Client(IP, port, "Jim");
+		Client client1 = new Client(IP, port, "Jim", numMsgs, 0);
 		client1.start();
-		Client client2 = new Client(IP, port, "Harrison");
+		Client client2 = new Client(IP, port, "Harrison", numMsgs, 300);
 		client2.start();
-		Client client3 = new Client(IP, port, "Steve");
+		Client client3 = new Client(IP, port, "Steve", numMsgs, 600);
 		client3.start();
-		Client client4 = new Client(IP, port, "Francis");
+		Client client4 = new Client(IP, port, "Francis", numMsgs, 900);
 		client4.start();
 
-		Server server = new Server(IP, port);
+		Server server = new Server(IP, port, delay);
 		server.start();
 	}
 }
